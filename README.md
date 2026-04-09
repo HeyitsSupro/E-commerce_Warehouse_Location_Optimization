@@ -46,4 +46,8 @@ You can adjust these constants at the top of `code.py`:
 | `T` | 34 hrs | Max delivery time |
 | `speed` | 40 km/h | Average vehicle speed |
 
+## Report
+A detailed project report covering the methodology, mathematical formulation, 
+and results is available in `warehouse_optimization_report.pdf`.
+
 ## This was a collaborative academic project.
