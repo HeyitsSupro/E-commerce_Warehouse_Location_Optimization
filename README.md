@@ -1,1 +1,1 @@
-# E-commerce_Warehouse_Location_Optimization
+This was a collaborative academic project
