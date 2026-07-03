@@ -12,38 +12,43 @@ within a ₹10,000,000 budget and a 36-hour delivery time limit.
 ## Approach
 - **Distances** computed via the Haversine formula (great-circle distance)
 - **Optimization** modelled as a MILP and solved using PuLP (CBC solver)
-- **Demand** modelled as a Poisson random variable; expected value used in objective
+- **Objective** minimizes a single annual total cost: annualized delivery cost (daily × 365) + annual setup cost, so the setup-vs-delivery tradeoff is handled explicitly rather than setup being only a budget cap
+- **Demand** taken as the expected daily order volume per city (deterministic)
+
+> **Note:** Some inputs (certain setup costs, demand figures, and rate assumptions) are illustrative placeholders, not sourced data. The point of the project is to show the formulation and solver produce a sensible, constraint-satisfying solution — absolute cost figures are model outputs on these inputs, not empirical estimates.
 
 ## Result
-The optimizer selects **Mumbai, Delhi, Bangalore, and Kolkata**, achieving a 
-minimum daily delivery cost of ₹1,08,461 across all 10 cities.
+The optimizer selects **Mumbai, Delhi, Bangalore, and Kolkata** as regional hubs
+covering all 10 cities within the budget, warehouse-count, and 36-hour delivery
+constraints. Total annual cost is **₹4,94,88,147** (annual delivery ₹3,95,88,147
++ annual setup ₹99,00,000); daily delivery cost is **₹1,08,461**.
 
 | City       | Served by  | Cost/Order (₹) | Delivery Time (hrs) |
 |------------|------------|----------------|----------------------|
-| Mumbai     | Mumbai     | 5.00           | 2.00                 |
-| Delhi      | Delhi      | 5.00           | 2.00                 |
-| Bangalore  | Bangalore  | 5.00           | 2.00                 |
-| Kolkata    | Kolkata    | 5.00           | 2.00                 |
-| Pune       | Mumbai     | 17.02          | 5.00                 |
-| Jaipur     | Delhi      | 28.75          | 7.94                 |
-| Chennai    | Bangalore  | 34.02          | 9.25                 |
-| Ahmedabad  | Mumbai     | 49.00          | 13.00                |
-| Lucknow    | Delhi      | 48.08          | 12.77                |
-| Hyderabad  | Bangalore  | 55.00          | 14.50                |
+| Mumbai     | Mumbai     | 0.00           | 0.00                 |
+| Delhi      | Delhi      | 0.00           | 0.00                 |
+| Bangalore  | Bangalore  | 0.00           | 0.00                 |
+| Kolkata    | Kolkata    | 0.00           | 0.00                 |
+| Pune       | Mumbai     | 12.02          | 3.00                 |
+| Jaipur     | Delhi      | 23.75          | 5.94                 |
+| Chennai    | Bangalore  | 29.02          | 7.25                 |
+| Lucknow    | Delhi      | 43.08          | 10.77                |
+| Ahmedabad  | Mumbai     | 44.00          | 11.00                |
+| Hyderabad  | Bangalore  | 50.00          | 12.50                |
 
 ## Setup
 ```bash
 pip install -r requirements.txt
-python code.py
+optimizer.py
 ```
 
 ## Parameters
-You can adjust these constants at the top of `code.py`:
+You can adjust these constants at the top of `optimizer.py`:
 | Parameter | Default | Description |
 |-----------|---------|-------------|
 | `B` | ₹10,000,000 | Total budget |
 | `K` | 4 | Max warehouses |
-| `T` | 34 hrs | Max delivery time |
+| `T` | 36 hrs | Max delivery time |
 | `speed` | 40 km/h | Average vehicle speed |
 
 ## Report
